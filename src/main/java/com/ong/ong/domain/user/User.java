@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//Cria uma tabel no banco "users", adiciona getters, setters e construtores no projeto com lombok
 @Entity
 @Table(name = "users")
 @Getter
@@ -14,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
 
+    //As entidades do banco, ID tem tipo de geração
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
