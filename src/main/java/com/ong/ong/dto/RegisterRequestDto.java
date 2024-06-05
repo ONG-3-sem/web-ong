@@ -1,4 +1,4 @@
 package com.ong.ong.dto;
 
-public record RegisterRequestDto(String nome, String email, String password) {
+public record RegisterRequestDto(String name, String email, String password) {
 }
