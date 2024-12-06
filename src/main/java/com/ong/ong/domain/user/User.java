@@ -14,8 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
-    //As entidades do banco, ID tem tipo de geração
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

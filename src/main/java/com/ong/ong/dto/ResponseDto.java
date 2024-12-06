@@ -1,4 +1,4 @@
 package com.ong.ong.dto;
 
-public record ResponseDto (String email, String token){
+public record ResponseDto (String nome, String token){
 }
