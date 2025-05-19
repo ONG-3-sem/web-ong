@@ -1,18 +1,15 @@
 package com.ong.ong.controllers;
 
-import com.ong.ong.domain.user.User;
-import com.ong.ong.dto.LoginRequestDto;
-import com.ong.ong.dto.RegisterRequestDto;
-import com.ong.ong.dto.ResponseDto;
+import com.ong.ong.domain.user.Student;
+import com.ong.ong.domain.user.Teacher;
+import com.ong.ong.dto.*;
 import com.ong.ong.infra.security.TokenService;
-import com.ong.ong.repositories.UserRepository;
+import com.ong.ong.repositories.StudentRepository;
+import com.ong.ong.repositories.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -20,35 +17,61 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserRepository repository;
+
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto body){
-        User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if(passwordEncoder.matches(body.password(), user.getPassword())) {
-            String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDto(user.getName(), token));
+
+    @PostMapping("/aluno/register")
+    public ResponseEntity<ResponseDto> registerAluno(@RequestBody StudentRegisterDto dto) {
+        if (studentRepository.findByEmail(dto.email()).isPresent()) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
+
+        Student student = new Student(dto, passwordEncoder);
+        studentRepository.save(student);
+
+        String token = tokenService.generateToken(student);
+        return ResponseEntity.ok(new ResponseDto(student.getEmail(), token));
+    }
+
+    @PostMapping("/aluno/login")
+    public ResponseEntity<ResponseDto> loginAluno(@RequestBody LoginRequestDto dto) {
+        Optional<Student> studentOpt = studentRepository.findByEmail(dto.email());
+
+        if (studentOpt.isPresent() && passwordEncoder.matches(dto.password(), studentOpt.get().getSenha())) {
+            String token = tokenService.generateToken(studentOpt.get());
+            return ResponseEntity.ok(new ResponseDto(studentOpt.get().getEmail(), token));
+        }
+
+        return ResponseEntity.status(401).build();
     }
 
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDto body){
-        Optional<User> user = this.repository.findByEmail(body.email());
-
-        if(user.isEmpty()) {
-            User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
-            this.repository.save(newUser);
-
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDto(newUser.getName(), token));
+    @PostMapping("/professor/register")
+    public ResponseEntity<ResponseDto> registerProfessor(@RequestBody TeacherRegisterDto dto) {
+        if (teacherRepository.findByEmail(dto.email()).isPresent()) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
+
+        Teacher teacher = new Teacher(dto, passwordEncoder);
+        teacherRepository.save(teacher);
+
+        String token = tokenService.generateToken(teacher);
+        return ResponseEntity.ok(new ResponseDto(teacher.getEmail(), token));
+    }
+
+    @PostMapping("/professor/login")
+    public ResponseEntity<ResponseDto> loginProfessor(@RequestBody LoginRequestDto dto) {
+        Optional<Teacher> teacherOpt = teacherRepository.findByEmail(dto.email());
+
+        if (teacherOpt.isPresent() && passwordEncoder.matches(dto.password(), teacherOpt.get().getSenha())) {
+            String token = tokenService.generateToken(teacherOpt.get());
+            return ResponseEntity.ok(new ResponseDto(teacherOpt.get().getEmail(), token));
+        }
+
+        return ResponseEntity.status(401).build();
     }
 }

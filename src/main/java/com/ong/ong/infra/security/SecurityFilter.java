@@ -1,7 +1,5 @@
 package com.ong.ong.infra.security;
 
-import com.ong.ong.domain.user.User;
-import com.ong.ong.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
