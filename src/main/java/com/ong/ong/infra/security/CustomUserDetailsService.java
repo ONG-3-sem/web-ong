@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(
                     aluno.getEmail(),
                     aluno.getSenha(),
-                    List.of(new SimpleGrantedAuthority("ROLE_ALUNO")));
+                    List.of(new SimpleGrantedAuthority("ROLE_STUDENT")));
         }
 
         var professorOpt = teacherRepository.findByEmail(username);
@@ -37,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(
                     professor.getEmail(),
                     professor.getSenha(),
-                    List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR")));
+                    List.of(new SimpleGrantedAuthority("ROLE_TEACHER")));
         }
 
         throw new UsernameNotFoundException("User not found");

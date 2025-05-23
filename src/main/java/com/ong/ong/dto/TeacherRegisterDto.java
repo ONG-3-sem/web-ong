@@ -16,7 +16,6 @@ public record TeacherRegisterDto(
         String complemento,
         String cidade,
         String estado,
-        String estadoCivil,
         String nivelEnsino,
         String materiaEspecializada,
         String modalidadeEnsino

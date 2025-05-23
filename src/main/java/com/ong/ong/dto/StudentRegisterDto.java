@@ -16,6 +16,5 @@ public record StudentRegisterDto(
         String complemento,
         String cidade,
         String estado,
-        String nomeMae,
         String nomeEscolaAtual
 ) {}

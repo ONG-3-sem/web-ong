@@ -24,7 +24,7 @@ public class AuthController {
     private final TokenService tokenService;
 
 
-    @PostMapping("/aluno/register")
+    @PostMapping("/student/register")
     public ResponseEntity<ResponseDto> registerAluno(@RequestBody StudentRegisterDto dto) {
         if (studentRepository.findByEmail(dto.email()).isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -37,7 +37,7 @@ public class AuthController {
         return ResponseEntity.ok(new ResponseDto(student.getEmail(), token));
     }
 
-    @PostMapping("/aluno/login")
+    @PostMapping("/student/login")
     public ResponseEntity<ResponseDto> loginAluno(@RequestBody LoginRequestDto dto) {
         Optional<Student> studentOpt = studentRepository.findByEmail(dto.email());
 
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/professor/register")
+    @PostMapping("/teacher/register")
     public ResponseEntity<ResponseDto> registerProfessor(@RequestBody TeacherRegisterDto dto) {
         if (teacherRepository.findByEmail(dto.email()).isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -63,7 +63,7 @@ public class AuthController {
         return ResponseEntity.ok(new ResponseDto(teacher.getEmail(), token));
     }
 
-    @PostMapping("/professor/login")
+    @PostMapping("/teacher/login")
     public ResponseEntity<ResponseDto> loginProfessor(@RequestBody LoginRequestDto dto) {
         Optional<Teacher> teacherOpt = teacherRepository.findByEmail(dto.email());
 
